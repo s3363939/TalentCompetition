@@ -25,3 +25,11 @@ C:\Talent-Competition\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common
 C:\Talent-Competition\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.AssemblyInfo.cs
 C:\Talent-Competition\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.dll
 C:\Talent-Competition\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.pdb
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\bin\Debug\netcoreapp2.0\Talent.Common.deps.json
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\bin\Debug\netcoreapp2.0\Talent.Common.dll
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\bin\Debug\netcoreapp2.0\Talent.Common.pdb
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.csprojAssemblyReference.cache
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.AssemblyInfoInputs.cache
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.AssemblyInfo.cs
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.dll
+C:\Users\yannd\Documents\IndustryConnect\Internship\Talent\Talent.Common\obj\Debug\netcoreapp2.0\Talent.Common.pdb

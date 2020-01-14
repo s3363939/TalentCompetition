@@ -165,7 +165,7 @@ namespace Talent.Services.Listing.Controllers
 
         [HttpGet("getSortedEmployerJobs")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "employer, recruiter")]
-        public async Task<IActionResult> GetSortedEmployerJobs(int activePage, string sortbyDate, bool showActive, bool showClosed, bool showDraft, bool showExpired, bool showUnexpired, string employerId = null, int limit = 6)
+        public async Task<IActionResult> GetSortedEmployerJobs(int activePage, string sortbyDate, bool showActive, bool showClosed, bool showDraft, bool showExpired, bool showUnexpired, string employerId = null, int limit = 10)
         {
             try
             {
@@ -193,10 +193,10 @@ namespace Talent.Services.Listing.Controllers
                 }
 
                 //TODO Draft not implemented yet
-                //if (!showDraft)
-                //{
-
-                //}
+                if (!showDraft)
+                {
+                    sortedJobs = sortedJobs.Where(x => x.Status != JobStatus.Draft);
+                }
 
                 if (sortbyDate == "desc")
                 {
@@ -217,6 +217,7 @@ namespace Talent.Services.Listing.Controllers
                 return Json(new { Success = false, Message = "Error while retriving Jobs" });
             }
         }
+
         [HttpPost("closeJob")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "employer, recruiter")]
         public async Task<IActionResult> CloseJob([FromBody]string id)

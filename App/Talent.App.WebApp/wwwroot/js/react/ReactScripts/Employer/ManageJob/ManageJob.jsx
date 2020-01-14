@@ -5,7 +5,7 @@ import LoggedInBanner from '../../Layout/Banner/LoggedInBanner.jsx';
 import { LoggedInNavigation } from '../../Layout/LoggedInNavigation.jsx';
 import { JobSummaryCard } from './JobSummaryCard.jsx';
 import { BodyWrapper, loaderData } from '../../Layout/BodyWrapper.jsx';
-import { Pagination, Icon, Dropdown, Checkbox, Accordion, Form, Segment } from 'semantic-ui-react';
+import { Pagination, Icon, Dropdown, Checkbox, Accordion, Form, Segment, Card } from 'semantic-ui-react';
 
 export default class ManageJob extends React.Component {
     constructor(props) {
@@ -13,7 +13,7 @@ export default class ManageJob extends React.Component {
         let loader = loaderData
         loader.allowedUsers.push("Employer");
         loader.allowedUsers.push("Recruiter");
-        //console.log(loader)
+        //console.log("constructor loader: ",loader)
         this.state = {
             loadJobs: [],
             loaderData: loader,
@@ -29,25 +29,24 @@ export default class ManageJob extends React.Component {
                 showUnexpired: true
             },
             totalPages: 1,
-            activeIndex: ""
+            activeIndex: "",
+            jobsFound: true
         }
         this.loadData = this.loadData.bind(this);
         this.init = this.init.bind(this);
         this.loadNewData = this.loadNewData.bind(this);
-        //your functions go here
+        this.renderJobs = this.renderJobs.bind(this);
+        this.renderNoJobs = this.renderNoJobs.bind(this);
     };
 
     init() {
         let loaderData = TalentUtil.deepCopy(this.state.loaderData)
         loaderData.isLoading = false;
-        this.setState({ loaderData });//comment this
+        this.setState({ loaderData });
 
-        //set loaderData.isLoading to false after getting data
-        //this.loadData(() =>
-        //    this.setState({ loaderData })
-        //)
-        
-        //console.log(this.state.loaderData)
+        this.loadData(() =>
+            this.setState({ loaderData })
+        );        
     }
 
     componentDidMount() {
@@ -55,9 +54,41 @@ export default class ManageJob extends React.Component {
     };
 
     loadData(callback) {
-        var link = 'http://localhost:51689/listing/listing/getSortedEmployerJobs';
         var cookies = Cookies.get('talentAuthToken');
-       // your ajax call and other logic goes here
+       
+        $.ajax({
+            url: 'http://localhost:51689/listing/listing/getSortedEmployerJobs',
+            headers: {
+                'Authorization': 'Bearer ' + cookies,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                'activePage': this.state.activePage,
+                'sortbyDate': this.state.sortBy.date,
+                'showActive': this.state.filter.showActive,
+                'showClosed': this.state.filter.showClosed,
+                'showDraft': this.state.filter.showDraft,
+                'showExpired': this.state.filter.showExpired,
+                'showUnexpired': this.state.filter.showUnexpired
+            },
+            type: "GET",
+            success: function (res) {
+                //console.log("Getting jobs: ", res);
+                this.setState({
+                    loadJobs: res.myJobs
+                });
+                if (res.totalCount > 0) {
+                    this.setState({
+                        jobsFound: true
+                    });
+                } else {
+                    this.setState({
+                        jobsFound: false
+                    });
+                }
+
+            }.bind(this)
+        })
     }
 
     loadNewData(data) {
@@ -74,10 +105,85 @@ export default class ManageJob extends React.Component {
         });
     }
 
+    renderJobs() {
+        //console.log("Jobs found", this.state.loadJobs);
+        return (<div className="ui container">
+                    <Card.Group>
+                        {this.state.loadJobs.map(job => <JobSummaryCard key={job.id} job={job}/>)}
+                    </Card.Group>
+                </div>);
+    }
+
+    renderNoJobs() {
+        //console.log("No jobs found");
+        return (<Segment> No jobs found </Segment>);
+    }
+
     render() {
+        const filterOptions = [
+            {
+                key: 'Active',
+                text: 'Active',
+                value: 'Active'
+            },
+            {
+                key: 'Closed',
+                text: 'Closed',
+                value: 'Closed'
+            },
+            {
+                key: 'Draft',
+                text: 'Draft',
+                value: 'Draft'
+            },
+            {
+                key: 'Expired',
+                text: 'Expired',
+                value: 'Expired'
+            },
+            {
+                key: 'Unexpired',
+                text: 'Unexpired',
+                value: 'Unexpired'
+            }
+        ];
         return (
             <BodyWrapper reload={this.init} loaderData={this.state.loaderData}>
-               <div className ="ui container">Your table goes here</div>
+                <section className="page-body">
+                    <div className="ui container">
+                        <header>
+                            <h1>List of jobs</h1>
+                            <br />
+                            <Icon name='filter' />Filter:  
+                            <Dropdown
+                                className="manage-jobs"
+                                text='Choose filter'
+                                inline
+                                options={filterOptions}
+                            />
+                            <Icon name='calendar alternate outline' />Sort by date:  
+                            <Dropdown
+                                className="manage-jobs"
+                                text='Newest first'
+                                inline>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item text='other' />                                    
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </header>
+                        {this.state.jobsFound ? this.renderJobs() : this.renderNoJobs()} 
+                        <br />
+                        <Pagination
+                            defaultActivePage={1}
+                            ellipsisItem={null}
+                            firstItem={null}
+                            lastItem={null}
+                            siblingRange={1}
+                            totalPages={1}
+                        />
+                        <br />
+                    </div>
+                </section>
             </BodyWrapper>
         )
     }

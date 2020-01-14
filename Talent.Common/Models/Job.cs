@@ -8,7 +8,7 @@ namespace Talent.Common.Models
 {
     public enum JobStatus
     {
-        Active, Closed
+        Active, Closed, Draft
     }
     
     public class Job:IMongoCommon
